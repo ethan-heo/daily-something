@@ -16,7 +16,7 @@ export async function upsertCalendarEvent(words: DailyWords): Promise<void> {
   });
 
   const calendar = google.calendar({ version: 'v3', auth });
-  const eventId = `daily-vocab-${words.date.replace(/-/g, '')}`;
+  const eventId = `vocab${words.date.replace(/-/g, '')}`;
   const attendeeEmail = process.env.ATTENDEE_EMAIL;
 
   const event = {
