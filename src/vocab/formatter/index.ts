@@ -1,4 +1,4 @@
-import type { RawWordEntry, WordEntry } from '../types';
+import type { RawWordEntry, WordEntry } from '../../types';
 import { buildFormattingPrompt, type Language } from './prompt';
 
 interface ClaudeFormattedEntry {

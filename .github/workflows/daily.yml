@@ -1,4 +1,4 @@
-name: Daily Vocab
+name: Daily
 
 on:
   schedule:
@@ -7,9 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  run:
+  setup:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -31,4 +30,12 @@ jobs:
           ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
-        run: npm start
+        run: npm run start:vocab
+
+      - name: Run daily news
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
+          NEWS_CALENDAR_ID: ${{ secrets.NEWS_CALENDAR_ID }}
+          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+          ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
+        run: npm run start:news

@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import { chromium } from 'playwright';
 import { upsertCalendarEvent } from './calendar';
-import { scrapeEnglishWords } from './scraper/english';
-import { scrapeJapaneseWords } from './scraper/japanese';
-import type { DailyWords, WordEntry } from './types';
+import { scrapeEnglishWords } from '../scraper/english';
+import { scrapeJapaneseWords } from '../scraper/japanese';
+import type { DailyWords, WordEntry } from '../types';
 
 export async function collectDailyWords(): Promise<{ date: string; englishRaw: Array<{ word: string; meaning: string }>; japaneseRaw: Array<{ word: string; meaning: string }> }> {
   const browser = await chromium.launch({ headless: true });

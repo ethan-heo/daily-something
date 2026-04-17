@@ -4,7 +4,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start:vocab": "ts-node src/vocab/index.ts",
     "start:news": "ts-node src/news/index.ts",
     "build": "tsc -p tsconfig.json"
   },

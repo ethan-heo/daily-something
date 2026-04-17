@@ -1,4 +1,4 @@
-import type { RawWordEntry } from '../types';
+import type { RawWordEntry } from '../../types';
 
 export type Language = 'en' | 'ja';
 
