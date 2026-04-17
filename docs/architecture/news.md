@@ -12,6 +12,7 @@
 src/news/index.ts
   └─ collectNews()              # 모든 스크래퍼 병렬 실행 + 중복 제거
        └─ scrapeYozm(page)      # 요즘IT 아티클 스크래핑
+       └─ scrapeSmashingMagazine(page) # Smashing Magazine 오늘 게시물 스크래핑
   └─ items.length === 0 → 종료  # 수집 결과 없으면 캘린더 업로드 생략
   └─ saveNews()                 # Google Calendar upsert
 ```
@@ -24,7 +25,7 @@ src/news/index.ts
 진입점. 수집된 아이템이 없으면 캘린더 업로드 없이 종료한다.
 
 ### `src/news/run.ts`
-- `collectNews()`: Playwright 브라우저를 열고 모든 스크래퍼를 `Promise.all`로 병렬 실행. URL 기준으로 중복 제거 후 반환
+- `collectNews()`: Playwright 브라우저를 열고 스크래퍼별 새 페이지를 만든 뒤 `Promise.all`로 병렬 실행. URL 기준으로 중복 제거 후 반환
 - `saveNews()`: calendar.ts의 `upsertNewsEvent()` 호출
 
 ### `src/news/calendar.ts`
@@ -44,6 +45,13 @@ src/news/index.ts
 - 컨테이너 셀렉터: `[data-testid="article-column-item--container"]`
 - 제목: 컨테이너 내 `h1~h4` 첫 번째 요소
 - URL: 컨테이너 내 첫 번째 `<a>` 태그의 `href` → 절대 URL로 변환
+
+### `src/scraper/smashingMagazine.ts`
+- 대상: `https://www.smashingmagazine.com/articles/`
+- 컨테이너 셀렉터: `.article--post`
+- 게시일: 컨테이너 내부 `time[date]` 우선, 없으면 `time[datetime]` fallback
+- 필터: 게시일을 `YYYY-MM-DD`로 정규화한 뒤 오늘 날짜(KST)와 일치하는 항목만 수집
+- 제목/URL: 컨테이너 내부 제목 링크(`h1~h4 a`) 기준으로 추출
 
 ---
 

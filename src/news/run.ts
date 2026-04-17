@@ -1,16 +1,26 @@
 import { chromium } from 'playwright';
+import { scrapeSmashingMagazine } from '../scraper/smashingMagazine';
 import { scrapeYozm } from '../scraper/yozm';
 import { upsertNewsEvent } from './calendar';
 import type { NewsItem } from '../types';
 
-const scrapers = [scrapeYozm];
+const scrapers = [scrapeYozm, scrapeSmashingMagazine];
 
 export async function collectNews(): Promise<{ date: string; items: NewsItem[] }> {
   const browser = await chromium.launch({ headless: true });
 
   try {
-    const page = await browser.newPage();
-    const results = await Promise.all(scrapers.map((scraper) => scraper(page)));
+    const results = await Promise.all(
+      scrapers.map(async (scraper) => {
+        const page = await browser.newPage();
+
+        try {
+          return await scraper(page);
+        } finally {
+          await page.close();
+        }
+      }),
+    );
     const items = deduplicateByUrl(results.flat());
     const date = getTodayInSeoul();
 
