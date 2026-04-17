@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+import { scrapeCssTricks } from '../scraper/cssTricks';
 import { scrapeJavaScriptWeekly } from '../scraper/javascriptWeekly';
 import { scrapeSmashingMagazine } from '../scraper/smashingMagazine';
 import { scrapeYozm } from '../scraper/yozm';
@@ -6,7 +7,7 @@ import { getTodayInSeoul } from '../shared/date';
 import { upsertNewsEvent } from './calendar';
 import type { NewsItem } from '../types';
 
-const scrapers = [scrapeYozm, scrapeSmashingMagazine, scrapeJavaScriptWeekly];
+const scrapers = [scrapeYozm, scrapeSmashingMagazine, scrapeCssTricks, scrapeJavaScriptWeekly];
 
 export async function collectNews(): Promise<{ date: string; items: NewsItem[] }> {
   const browser = await chromium.launch({ headless: true });
