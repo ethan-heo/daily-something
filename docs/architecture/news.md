@@ -16,6 +16,7 @@ src/news/index.ts
        └─ scrapeJavaScriptWeekly(page) # JavaScript Weekly RSS 오늘 게시물 수집
        └─ scrapeFrontendWeekly(page) # Frontend Weekly RSS 오늘 게시물 수집
        └─ scrapeNodeWeekly(page) # Node Weekly RSS 오늘 게시물 수집
+       └─ scrapeCssWeekly(page) # CSS Weekly RSS 오늘 뉴스레터 본문 파싱
   └─ items.length === 0 → 종료  # 수집 결과 없으면 캘린더 업로드 생략
   └─ saveNews()                 # Google Calendar upsert
 ```
@@ -81,6 +82,13 @@ src/news/index.ts
 - 필터: 오늘 날짜(KST)와 일치하는 항목만 수집
 - 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
 
+### `src/scraper/cssWeekly.ts`
+- 대상 RSS: `https://feedpress.me/cssweekly`
+- 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져온 뒤, 오늘 날짜(KST)와 일치하는 `Issue #...` / `Newsletter` 아이템 1건을 선택
+- 본문 파싱: `content:encoded` HTML을 섹션 단위로 분리하고 `Headlines`, `Quick Tips`, `Articles`, `Tools`, `Inspiration` 구간의 `h3 a` 링크를 추출
+- 제외 규칙: 스폰서/유튜브/친구 소개 섹션과 광고성 URL(`youtube.com`, `youtu.be`, `cssw.io` 등)은 제외
+- URL 정리: 기사 링크의 `utm_*` 쿼리 파라미터 제거 후 `NewsItem[]`로 반환
+
 ### `src/shared/date.ts`
 서울 기준 오늘 날짜와 다음 날짜를 `YYYY-MM-DD` 형식으로 계산하는 공통 유틸.
 
@@ -130,6 +138,7 @@ const scrapers = [
   scrapeJavaScriptWeekly,
   scrapeFrontendWeekly,
   scrapeNodeWeekly,
+  scrapeCssWeekly,
   scrapeNewSource,
 ];
 ```
