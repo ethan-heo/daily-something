@@ -48,6 +48,8 @@ src/news/index.ts
 - 컨테이너 셀렉터: `[data-testid="article-column-item--container"]`
 - 제목: 컨테이너 내 `h1~h4` 첫 번째 요소
 - URL: 컨테이너 내 첫 번째 `<a>` 태그의 `href` → 절대 URL로 변환
+- 상세 페이지 검증: 각 URL에 진입해 `meta[name="date"]`의 `content` 값을 읽고 `YYYY-MM-DD`로 정규화
+- 필터: `src/shared/date.ts` 기준 오늘 날짜(KST)와 일치하는 항목만 수집
 
 ### `src/scraper/smashingMagazine.ts`
 - 대상: `https://www.smashingmagazine.com/articles/`
