@@ -1,6 +1,5 @@
 import type { Page } from 'playwright';
 import type { NewsItem } from '../types';
-import { getTodayInSeoul } from '../shared/date';
 
 const FEED_URL = 'https://feedpress.me/cssweekly';
 const SOURCE = 'CSS Weekly';
@@ -16,7 +15,7 @@ const EXCLUDED_URL_PATTERNS = [
   'cssw.io/',
 ];
 
-export async function scrapeCssWeekly(_page: Page): Promise<NewsItem[]> {
+export async function scrapeCssWeekly(_page: Page, targetDate: string): Promise<NewsItem[]> {
   const response = await fetch(FEED_URL);
 
   if (!response.ok) {
@@ -24,9 +23,8 @@ export async function scrapeCssWeekly(_page: Page): Promise<NewsItem[]> {
   }
 
   const xml = await response.text();
-  const today = getTodayInSeoul();
   const items = extractItems(xml);
-  const newsletter = items.find((item) => isTodayNewsletter(item, today));
+  const newsletter = items.find((item) => isTargetDateNewsletter(item, targetDate));
 
   if (!newsletter) return [];
 
@@ -59,9 +57,9 @@ function stripCdata(value: string): string {
   return cdataMatch ? cdataMatch[1] : value;
 }
 
-function isTodayNewsletter(item: string, today: string): boolean {
+function isTargetDateNewsletter(item: string, targetDate: string): boolean {
   const publishedAt = normalizeDate(extractTagValue(item, 'pubDate'));
-  if (publishedAt !== today) return false;
+  if (publishedAt !== targetDate) return false;
 
   const title = decodeXml(stripHtml(extractTagValue(item, 'title'))).trim();
   const category = decodeXml(stripHtml(extractTagValue(item, 'category'))).trim();

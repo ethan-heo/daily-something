@@ -1,17 +1,15 @@
 import type { Page } from 'playwright';
 import type { NewsItem } from '../types';
-import { getTodayInSeoul } from '../shared/date';
 
 const BASE_URL = 'https://yozm.wishket.com';
 const LIST_URL = `${BASE_URL}/magazine/list/new/`;
 const CONTAINER = '[data-testid="article-column-item--container"]';
 const SOURCE = '요즘IT';
 
-export async function scrapeYozm(page: Page): Promise<NewsItem[]> {
+export async function scrapeYozm(page: Page, targetDate: string): Promise<NewsItem[]> {
   await page.goto(LIST_URL, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector(CONTAINER, { timeout: 30000 });
 
-  const today = getTodayInSeoul();
   const items = await page.locator(CONTAINER).evaluateAll((elements) =>
     elements.flatMap((element) => {
       const anchor = element.querySelector('a');
@@ -29,7 +27,7 @@ export async function scrapeYozm(page: Page): Promise<NewsItem[]> {
   for (const item of items) {
     const url = item.href.startsWith('http') ? item.href : `${BASE_URL}${item.href}`;
     const publishedAt = await extractPublishedDate(page, url);
-    if (publishedAt !== today) continue;
+    if (publishedAt !== targetDate) continue;
 
     results.push({ title: item.title, url, source: SOURCE, publishedAt });
   }

@@ -1,11 +1,10 @@
 import type { Page } from 'playwright';
 import type { NewsItem } from '../types';
-import { getTodayInSeoul } from '../shared/date';
 
 const FEED_URL = 'https://cprss.s3.amazonaws.com/nodeweekly.com.xml';
 const SOURCE = 'Node Weekly';
 
-export async function scrapeNodeWeekly(_page: Page): Promise<NewsItem[]> {
+export async function scrapeNodeWeekly(_page: Page, targetDate: string): Promise<NewsItem[]> {
   const response = await fetch(FEED_URL);
 
   if (!response.ok) {
@@ -13,13 +12,12 @@ export async function scrapeNodeWeekly(_page: Page): Promise<NewsItem[]> {
   }
 
   const xml = await response.text();
-  const today = getTodayInSeoul();
   const items = extractItems(xml);
   const results: NewsItem[] = [];
 
   for (const item of items) {
     const publishedAt = normalizeDate(extractTagValue(item, 'pubDate'));
-    if (publishedAt !== today) continue;
+    if (publishedAt !== targetDate) continue;
 
     const title = decodeXml(extractTagValue(item, 'title')).trim();
     const url = decodeXml(extractTagValue(item, 'link')).trim();

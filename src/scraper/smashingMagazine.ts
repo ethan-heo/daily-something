@@ -1,22 +1,20 @@
 import type { Page } from 'playwright';
 import type { NewsItem } from '../types';
-import { getTodayInSeoul } from '../shared/date';
 
 const LIST_URL = 'https://www.smashingmagazine.com/articles/';
 const CONTAINER = '.article--post';
 const SOURCE = 'Smashing Magazine';
 
-export async function scrapeSmashingMagazine(page: Page): Promise<NewsItem[]> {
+export async function scrapeSmashingMagazine(page: Page, targetDate: string): Promise<NewsItem[]> {
   await page.goto(LIST_URL, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector(CONTAINER, { timeout: 30000 });
 
-  const today = getTodayInSeoul();
   const items = await page.locator(CONTAINER).all();
   const results: NewsItem[] = [];
 
   for (const item of items) {
     const publishedAt = await extractPublishedDate(item);
-    if (publishedAt !== today) continue;
+    if (publishedAt !== targetDate) continue;
 
     const anchor = item.locator('h1 a, h2 a, h3 a, h4 a, a').first();
     const href = await anchor.getAttribute('href');

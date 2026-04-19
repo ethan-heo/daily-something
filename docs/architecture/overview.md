@@ -9,7 +9,7 @@
 | 기능 | 설명 | 스크립트 |
 |------|------|----------|
 | `vocab` | 네이버 오늘의 영단어/일본어 → Claude API로 예문 생성 → 캘린더 등록 | `npm run start:vocab` |
-| `news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly / CSS Weekly 오늘 게시물 수집 → 캘린더 등록 | `npm run start:news` |
+| `news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly / CSS Weekly 전날 게시물 수집 → 캘린더 등록 | `npm run start:news` |
 
 ---
 
@@ -34,7 +34,7 @@ src/
 │   └── formatter/
 │       ├── index.ts          # Claude API 호출 및 파싱
 │       └── prompt.ts         # 언어별 프롬프트 정의
-└── news/                     # 오늘의 뉴스 기능
+└── news/                     # 전날 뉴스 수집 기능
     ├── index.ts              # 진입점
     ├── run.ts                # 오케스트레이터
     └── calendar.ts           # news 설명 생성 + 공통 캘린더 업로드 호출
