@@ -10,7 +10,7 @@ export async function upsertNewsEvent(date: string, items: NewsItem[]): Promise<
   await upsertAllDayCalendarEvent({
     calendarId,
     eventId: `mag${date.replace(/-/g, '')}`,
-    summary: `📰 기술 뉴스 (${date})`,
+    summary: `📰 오늘의 기술 뉴스 (${date})`,
     date,
     attendeeEmail: process.env.ATTENDEE_EMAIL,
     description: buildDescription(items),
