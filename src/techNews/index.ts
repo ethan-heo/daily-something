@@ -5,7 +5,7 @@ async function main(): Promise<void> {
   const { date, items } = await collectNews();
 
   if (items.length === 0) {
-    console.log(`No news items found for ${date}, skipping calendar upload.`);
+    console.log(`No tech news items found for ${date}, skipping calendar upload.`);
     return;
   }
 

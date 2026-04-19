@@ -4,4 +4,4 @@
 
 - [전체 구조 및 실행 방법](docs/architecture/overview.md)
 - [Vocab 기능 아키텍처](docs/architecture/vocab.md)
-- [News 기능 아키텍처](docs/architecture/news.md)
+- [Tech News 기능 아키텍처](docs/architecture/tech-news.md)

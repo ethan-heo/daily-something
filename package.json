@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "start:vocab": "ts-node src/vocab/index.ts",
-    "start:news": "ts-node src/news/index.ts",
+    "start:tech-news": "ts-node src/techNews/index.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {

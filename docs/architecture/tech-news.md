@@ -1,4 +1,4 @@
-# News 기능 아키텍처
+# Tech News 기능 아키텍처
 
 ## 목적
 
@@ -9,7 +9,7 @@
 ## 실행 흐름
 
 ```
-src/news/index.ts
+src/techNews/index.ts
   └─ collectNews()              # 모든 스크래퍼 병렬 실행 + 중복 제거
        └─ scrapeYozm(page, targetDate) # 요즘IT 기준일 아티클 스크래핑
        └─ scrapeSmashingMagazine(page, targetDate) # Smashing Magazine 기준일 게시물 스크래핑
@@ -25,19 +25,19 @@ src/news/index.ts
 
 ## 파일별 역할
 
-### `src/news/index.ts`
+### `src/techNews/index.ts`
 진입점. 수집된 아이템이 없으면 캘린더 업로드 없이 종료한다.
 
-### `src/news/run.ts`
+### `src/techNews/run.ts`
 - `collectNews()`: Playwright 브라우저를 열고 스크래퍼별 새 페이지를 만든 뒤 `Promise.all`로 병렬 실행. 전날 날짜(KST)를 기준으로 수집하고 URL 기준으로 중복 제거 후 반환
 - 기준 날짜(KST)는 `src/shared/date.ts`의 `getYesterdayInSeoul()`로 계산
 - `saveNews()`: calendar.ts의 `upsertNewsEvent()` 호출
 
-### `src/news/calendar.ts`
-- 이벤트 ID: `mag{YYYYMMDD}` (`news`의 `w`는 base32hex 범위 초과로 사용 불가)
-- 역할: news용 description 문자열을 만들고 `src/shared/googleCalendar.ts`의 `upsertAllDayCalendarEvent()`를 호출
+### `src/techNews/calendar.ts`
+- 이벤트 ID: `mag{YYYYMMDD}` (`technews`의 `w`는 base32hex 범위 초과로 사용 불가)
+- 역할: tech news용 description 문자열을 만들고 `src/shared/googleCalendar.ts`의 `upsertAllDayCalendarEvent()`를 호출
 - 이벤트 구조:
-  - summary: `📰 뉴스 모음 (YYYY-MM-DD)`
+  - summary: `📰 기술 뉴스 (YYYY-MM-DD)`
   - description: 아티클 목록 (소스·제목·URL)
 - 각 아이템 포맷:
   ```
@@ -127,11 +127,11 @@ interface NewsItem {
 ## 새 스크래퍼 추가 방법
 
 1. `src/scraper/`에 새 파일 생성 (`(page: Page, targetDate: string) => Promise<NewsItem[]>` 시그니처)
-2. `src/news/run.ts`의 `scrapers` 배열에 추가
+2. `src/techNews/run.ts`의 `scrapers` 배열에 추가
 3. 공통 날짜/캘린더 동작이 필요하면 `src/shared/` 유틸을 재사용
 
 ```ts
-// src/news/run.ts
+// src/techNews/run.ts
 const scrapers = [
   scrapeYozm,
   scrapeSmashingMagazine,

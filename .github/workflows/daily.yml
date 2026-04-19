@@ -32,9 +32,9 @@ jobs:
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
         run: npm run start:vocab
 
-      - name: Run daily news
+      - name: Run daily tech news
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
           CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
           ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
-        run: npm run start:news
+        run: npm run start:tech-news
