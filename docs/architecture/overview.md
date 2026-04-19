@@ -91,7 +91,6 @@ index.ts  →  run.ts  →  scraper/*.ts             (데이터 수집)
 | `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` | vocab/news 공통 | 서비스 계정 키 JSON 문자열 (GitHub Actions용) |
 | `GOOGLE_SERVICE_ACCOUNT_KEY_PATH` | 로컬 개발용 | 서비스 계정 키 파일 경로 |
 | `CALENDAR_ID` | vocab/news 공통 | Google Calendar ID |
-| `NEWS_CALENDAR_ID` | news 선택 | news 전용 캘린더 ID (없으면 `CALENDAR_ID` 사용) |
 | `ATTENDEE_EMAIL` | 선택 | 이벤트 초대 이메일 |
 | `ANTHROPIC_API_KEY` | vocab 전용 | Claude API 키 |
 | `ANTHROPIC_MODEL` | vocab 선택 | 사용할 Claude 모델 (기본값: `claude-3-5-sonnet-latest`) |

@@ -42,7 +42,7 @@ src/news/index.ts
   [소스명] 아티클 제목
   https://...
   ```
-- `NEWS_CALENDAR_ID`가 설정되어 있으면 해당 캘린더 사용, 없으면 `CALENDAR_ID` 폴백
+- `CALENDAR_ID`를 사용해 캘린더에 업로드
 
 ### `src/scraper/yozm.ts`
 - 대상: `https://yozm.wishket.com/magazine/list/new/`
@@ -102,7 +102,6 @@ interface NewsItem {
 |------|------|
 | `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` or `GOOGLE_SERVICE_ACCOUNT_KEY_PATH` | Google 서비스 계정 인증 |
 | `CALENDAR_ID` | 기본 Google Calendar ID |
-| `NEWS_CALENDAR_ID` | (선택) news 전용 캘린더 ID. 설정 시 `CALENDAR_ID` 대신 사용 |
 | `ATTENDEE_EMAIL` | (선택) 이벤트 초대할 이메일 |
 
 ---

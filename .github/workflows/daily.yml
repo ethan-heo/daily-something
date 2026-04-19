@@ -35,7 +35,6 @@ jobs:
       - name: Run daily news
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
-          NEWS_CALENDAR_ID: ${{ secrets.NEWS_CALENDAR_ID }}
           CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
           ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
         run: npm run start:news
