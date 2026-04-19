@@ -9,7 +9,7 @@
 | 기능 | 설명 | 스크립트 |
 |------|------|----------|
 | `vocab` | 네이버 오늘의 영단어/일본어 → Claude API로 예문 생성 → 캘린더 등록 | `npm run start:vocab` |
-| `tech-news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly / CSS Weekly 전날 게시물 수집 → 캘린더 등록 | `npm run start:tech-news` |
+| `tech-news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly / CSS Weekly 당일 게시물 수집 → 캘린더 등록 | `npm run start:tech-news` |
 
 ---
 
@@ -34,7 +34,7 @@ src/
 │   └── formatter/
 │       ├── index.ts          # Claude API 호출 및 파싱
 │       └── prompt.ts         # 언어별 프롬프트 정의
-└── techNews/                 # 전날 기술 뉴스 수집 기능
+└── techNews/                 # 당일 기술 뉴스 수집 기능
     ├── index.ts              # 진입점
     ├── run.ts                # 오케스트레이터
     └── calendar.ts           # 기술 뉴스 설명 생성 + 공통 캘린더 업로드 호출
@@ -76,11 +76,13 @@ index.ts  →  run.ts  →  scraper/*.ts             (데이터 수집)
 
 ## GitHub Actions
 
-`.github/workflows/daily.yml` 하나로 vocab과 tech news를 순차 실행한다.
+GitHub Actions 워크플로는 기능별로 분리한다.
 
-- 실행 시각: 매일 **05:30 KST** (20:30 UTC)
-- 트리거: 스케줄 + `workflow_dispatch` (수동 실행 가능)
-- 실행 순서: vocab → tech-news
+- `daily-vocab.yml`: vocab 전용
+- `daily-tech-news.yml`: tech news 전용
+- vocab 실행 시각: 매일 **05:30 KST** (전일 20:30 UTC)
+- tech-news 실행 시각: 매일 **09:00 KST** (00:00 UTC), **18:00 KST** (09:00 UTC)
+- 트리거: 각 워크플로별 `schedule` + `workflow_dispatch`
 
 ---
 

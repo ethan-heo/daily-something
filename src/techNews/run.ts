@@ -5,7 +5,7 @@ import { scrapeJavaScriptWeekly } from '../scraper/javascriptWeekly';
 import { scrapeNodeWeekly } from '../scraper/nodeWeekly';
 import { scrapeSmashingMagazine } from '../scraper/smashingMagazine';
 import { scrapeYozm } from '../scraper/yozm';
-import { getYesterdayInSeoul } from '../shared/date';
+import { getTodayInSeoul } from '../shared/date';
 import { upsertNewsEvent } from './calendar';
 import type { NewsItem } from '../types';
 
@@ -20,7 +20,7 @@ const scrapers = [
 
 export async function collectNews(): Promise<{ date: string; items: NewsItem[] }> {
   const browser = await chromium.launch({ headless: true });
-  const targetDate = getYesterdayInSeoul();
+  const targetDate = getTodayInSeoul();
 
   try {
     const results = await Promise.all(

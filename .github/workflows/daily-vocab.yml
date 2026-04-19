@@ -1,13 +1,13 @@
-name: Daily
+name: Daily Vocab
 
 on:
   schedule:
-    # 매일 오전 5시 30분 KST (= 20:30 UTC)
+    # 매일 오전 5시 30분 KST (= 전일 20:30 UTC)
     - cron: '30 20 * * *'
   workflow_dispatch:
 
 jobs:
-  setup:
+  run-vocab:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,10 +31,3 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
         run: npm run start:vocab
-
-      - name: Run daily tech news
-        env:
-          GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
-          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
-          ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
-        run: npm run start:tech-news

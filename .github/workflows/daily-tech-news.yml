@@ -1,0 +1,33 @@
+name: Daily Tech News
+
+on:
+  schedule:
+    # 매일 오전 9시 00분 KST (= 00:00 UTC)
+    - cron: '0 0 * * *'
+    # 매일 오후 6시 00분 KST (= 09:00 UTC)
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-tech-news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run daily tech news
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
+          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+          ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
+        run: npm run start:tech-news
