@@ -1,6 +1,7 @@
 import { chromium } from 'playwright';
 import { scrapeFrontendWeekly } from '../scraper/frontendWeekly';
 import { scrapeJavaScriptWeekly } from '../scraper/javascriptWeekly';
+import { scrapeNodeWeekly } from '../scraper/nodeWeekly';
 import { scrapeSmashingMagazine } from '../scraper/smashingMagazine';
 import { scrapeYozm } from '../scraper/yozm';
 import { getTodayInSeoul } from '../shared/date';
@@ -12,6 +13,7 @@ const scrapers = [
   scrapeSmashingMagazine,
   scrapeJavaScriptWeekly,
   scrapeFrontendWeekly,
+  scrapeNodeWeekly,
 ];
 
 export async function collectNews(): Promise<{ date: string; items: NewsItem[] }> {

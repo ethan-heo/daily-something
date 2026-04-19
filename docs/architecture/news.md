@@ -15,6 +15,7 @@ src/news/index.ts
        └─ scrapeSmashingMagazine(page) # Smashing Magazine 오늘 게시물 스크래핑
        └─ scrapeJavaScriptWeekly(page) # JavaScript Weekly RSS 오늘 게시물 수집
        └─ scrapeFrontendWeekly(page) # Frontend Weekly RSS 오늘 게시물 수집
+       └─ scrapeNodeWeekly(page) # Node Weekly RSS 오늘 게시물 수집
   └─ items.length === 0 → 종료  # 수집 결과 없으면 캘린더 업로드 생략
   └─ saveNews()                 # Google Calendar upsert
 ```
@@ -73,6 +74,13 @@ src/news/index.ts
 - 필터: 오늘 날짜(KST)와 일치하는 항목만 수집
 - 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
 
+### `src/scraper/nodeWeekly.ts`
+- 대상 RSS: `https://cprss.s3.amazonaws.com/nodeweekly.com.xml`
+- 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져와 `<item>` 단위로 파싱
+- 게시일: 각 아이템의 `pubDate`를 서울 시간대 `YYYY-MM-DD`로 정규화
+- 필터: 오늘 날짜(KST)와 일치하는 항목만 수집
+- 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
+
 ### `src/shared/date.ts`
 서울 기준 오늘 날짜와 다음 날짜를 `YYYY-MM-DD` 형식으로 계산하는 공통 유틸.
 
@@ -121,6 +129,7 @@ const scrapers = [
   scrapeSmashingMagazine,
   scrapeJavaScriptWeekly,
   scrapeFrontendWeekly,
+  scrapeNodeWeekly,
   scrapeNewSource,
 ];
 ```

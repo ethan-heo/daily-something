@@ -9,7 +9,7 @@
 | 기능 | 설명 | 스크립트 |
 |------|------|----------|
 | `vocab` | 네이버 오늘의 영단어/일본어 → Claude API로 예문 생성 → 캘린더 등록 | `npm run start:vocab` |
-| `news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly 오늘 게시물 수집 → 캘린더 등록 | `npm run start:news` |
+| `news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly 오늘 게시물 수집 → 캘린더 등록 | `npm run start:news` |
 
 ---
 
