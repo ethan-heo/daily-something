@@ -1,0 +1,29 @@
+name: Daily News
+
+on:
+  schedule:
+    # 매일 오전 8시 00분 KST (= 전일 23:00 UTC)
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run daily news
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
+          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+          NEWS_CALENDAR_ID: ${{ secrets.NEWS_CALENDAR_ID }}
+          ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
+        run: npm run start:news

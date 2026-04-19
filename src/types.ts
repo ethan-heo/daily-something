@@ -2,7 +2,15 @@ export interface NewsItem {
   title: string;
   url: string;
   source: string;
+  category?: string;
   publishedAt?: string;
+}
+
+export interface NewsLink {
+  title: string;
+  url: string;
+  source?: string;
+  category?: string;
 }
 
 export interface RawWordEntry {

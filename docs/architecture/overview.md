@@ -10,6 +10,7 @@
 |------|------|----------|
 | `vocab` | 네이버 오늘의 영단어/일본어 → Claude API로 예문 생성 → 캘린더 등록 | `npm run start:vocab` |
 | `tech-news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly / CSS Weekly 당일 게시물 수집 → 캘린더 등록 | `npm run start:tech-news` |
+| `news` | 사용자가 직접 관리하는 뉴스 링크 목록 → 캘린더 등록 | `npm run start:news` |
 
 ---
 
@@ -34,13 +35,21 @@ src/
 │   └── formatter/
 │       ├── index.ts          # Claude API 호출 및 파싱
 │       └── prompt.ts         # 언어별 프롬프트 정의
-└── techNews/                 # 당일 기술 뉴스 수집 기능
+├── techNews/                 # 당일 기술 뉴스 수집 기능
+│   ├── index.ts              # 진입점
+│   ├── run.ts                # 오케스트레이터
+│   └── calendar.ts           # 기술 뉴스 설명 생성 + 공통 캘린더 업로드 호출
+└── news/                     # 사용자가 직접 관리하는 링크 등록 기능
     ├── index.ts              # 진입점
     ├── run.ts                # 오케스트레이터
-    └── calendar.ts           # 기술 뉴스 설명 생성 + 공통 캘린더 업로드 호출
+    ├── links.ts              # 링크 파일 로드 및 검증
+    └── calendar.ts           # news 설명 생성 + 공통 캘린더 업로드 호출
+
+data/
+└── news-links.json           # news 링크 목록
 ```
 
-각 기능(`vocab`, `tech-news`)은 독립적인 진입점을 가지며 동일한 구조를 따른다.
+각 기능(`vocab`, `tech-news`, `news`)은 독립적인 진입점을 가진다.
 
 ---
 
@@ -59,6 +68,8 @@ index.ts  →  run.ts  →  scraper/*.ts             (데이터 수집)
 4. `calendar.ts`: 기능별 summary/description 생성
 5. `shared/googleCalendar.ts`: Google Calendar API로 종일 이벤트 upsert
 
+> `news`는 스크래퍼 대신 `data/news-links.json`을 읽어 데이터를 구성한다.
+
 ---
 
 ## Google Calendar 이벤트 구조
@@ -67,6 +78,7 @@ index.ts  →  run.ts  →  scraper/*.ts             (데이터 수집)
 |------|---------------|------|
 | vocab | `vocab{YYYYMMDD}` | `vocab20260417` |
 | tech-news | `mag{YYYYMMDD}` | `mag20260417` |
+| news | `link{YYYYMMDD}` | `link20260417` |
 
 > Google Calendar 이벤트 ID는 base32hex 문자(`0-9`, `a-v`)만 허용한다.
 
@@ -80,8 +92,10 @@ GitHub Actions 워크플로는 기능별로 분리한다.
 
 - `daily-vocab.yml`: vocab 전용
 - `daily-tech-news.yml`: tech news 전용
+- `daily-news.yml`: news 전용
 - vocab 실행 시각: 매일 **05:30 KST** (전일 20:30 UTC)
 - tech-news 실행 시각: 매일 **09:00 KST** (00:00 UTC), **18:00 KST** (09:00 UTC)
+- news 실행 시각: 매일 **08:00 KST** (전일 23:00 UTC)
 - 트리거: 각 워크플로별 `schedule` + `workflow_dispatch`
 
 ---
@@ -90,9 +104,10 @@ GitHub Actions 워크플로는 기능별로 분리한다.
 
 | 변수 | 필수 | 설명 |
 |------|------|------|
-| `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` | vocab/tech-news 공통 | 서비스 계정 키 JSON 문자열 (GitHub Actions용) |
+| `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` | vocab/tech-news/news 공통 | 서비스 계정 키 JSON 문자열 (GitHub Actions용) |
 | `GOOGLE_SERVICE_ACCOUNT_KEY_PATH` | 로컬 개발용 | 서비스 계정 키 파일 경로 |
-| `CALENDAR_ID` | vocab/tech-news 공통 | Google Calendar ID |
+| `CALENDAR_ID` | vocab/tech-news/news 공통 | Google Calendar ID |
+| `NEWS_CALENDAR_ID` | news 선택 | news 전용 캘린더 ID. 없으면 `CALENDAR_ID` 사용 |
 | `ATTENDEE_EMAIL` | 선택 | 이벤트 초대 이메일 |
 | `ANTHROPIC_API_KEY` | vocab 전용 | Claude API 키 |
 | `ANTHROPIC_MODEL` | vocab 선택 | 사용할 Claude 모델 (기본값: `claude-3-5-sonnet-latest`) |
@@ -112,4 +127,5 @@ cp .env.example .env
 # 실행
 npm run start:vocab
 npm run start:tech-news
+npm run start:news
 ```

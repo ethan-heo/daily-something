@@ -6,6 +6,7 @@
   "scripts": {
     "start:vocab": "ts-node src/vocab/index.ts",
     "start:tech-news": "ts-node src/techNews/index.ts",
+    "start:news": "ts-node src/news/index.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {

@@ -1,0 +1,50 @@
+[
+  {
+    "title": "etnews",
+    "url": "https://www.etnews.com/news/section.html?id1=03",
+    "source": "etnews",
+    "category": "IT"
+  },
+  {
+    "title": "ars technica",
+    "url": "https://arstechnica.com/tag/the-verge/",
+    "source": "ars technica",
+    "category": "IT"
+  },
+  {
+    "title": "한국경제",
+    "url": "https://www.hankyung.com/economy",
+    "source": "한국경제",
+    "category": "경제"
+  },
+  {
+    "title": "매일경제",
+    "url": "https://www.mk.co.kr/news/economy",
+    "source": "매일경제",
+    "category": "경제"
+  },
+  {
+    "title": "부동산 R114",
+    "url": "https://www.r114.com/?_c=research",
+    "source": "부동산 R114",
+    "category": "부동산"
+  },
+  {
+    "title": "프레시안",
+    "url": "https://www.pressian.com/pages/opinion",
+    "source": "프레시안",
+    "category": "칼럼"
+  },
+  {
+    "title": "코메디닷컴",
+    "url": "https://kormedi.com/category/healthnews/",
+    "source": "코메디닷컴",
+    "category": "건강"
+  },
+  {
+    "title": "질병관리청",
+    "url": "https://health.kdca.go.kr/healthinfo/biz/health/ntcnInfo/healthSourc/thtimtCntnts/thtimtCntntsMain.do",
+    "source": "질병관리청",
+    "category": "건강"
+  }
+]
