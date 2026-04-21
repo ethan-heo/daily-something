@@ -2,8 +2,8 @@ name: Daily News
 
 on:
   schedule:
-    # 매일 오전 6시 00분 KST (= 전일 21:00 UTC)
-    - cron: '0 21 * * *'
+    # 매일 오전 9시 00분 KST (= 00:00 UTC)
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -24,6 +24,7 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
           CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+          DAILY_NEWS_CALENDAR_ID: ${{ secrets.DAILY_NEWS_CALENDAR_ID }}
           NEWS_CALENDAR_ID: ${{ secrets.NEWS_CALENDAR_ID }}
           ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
         run: npm run start:news
