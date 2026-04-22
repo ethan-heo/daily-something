@@ -7,9 +7,11 @@
     "start:vocab": "ts-node src/vocab/index.ts",
     "start:tech-news": "ts-node src/techNews/index.ts",
     "start:news": "ts-node src/news/index.ts",
+    "start:todo": "ts-node src/todo/index.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@notionhq/client": "^5.20.0",
     "dotenv": "^16.4.5",
     "googleapis": "^140.0.0",
     "playwright": "^1.44.0"

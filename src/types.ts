@@ -32,3 +32,11 @@ export interface DailyWords {
   english: WordEntry[];
   japanese: WordEntry[];
 }
+
+export interface NotionTodoItem {
+  pageId: string;
+  title: string;
+  startDateTime: string;
+  endDateTime?: string;
+  pageUrl: string;
+}

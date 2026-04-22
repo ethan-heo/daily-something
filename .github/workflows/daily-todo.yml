@@ -1,0 +1,33 @@
+name: Daily Todo
+
+on:
+  schedule:
+    # 매일 오전 12시 00분 KST (= 전일 15:00 UTC)
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-todo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run daily todo
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
+          ETHAN_CALENDAR_ID: ${{ secrets.ETHAN_CALENDAR_ID }}
+          ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_TODO_DATABASE_ID: ${{ secrets.NOTION_TODO_DATABASE_ID }}
+          NOTION_DATE_PROPERTY: ${{ vars.NOTION_DATE_PROPERTY }}
+          NOTION_STATUS_PROPERTY: ${{ vars.NOTION_STATUS_PROPERTY }}
+          NOTION_TODO_STATUS_VALUES: ${{ vars.NOTION_TODO_STATUS_VALUES }}
+        run: npm run start:todo

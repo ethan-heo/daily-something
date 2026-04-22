@@ -12,6 +12,16 @@ export interface AllDayCalendarEventInput {
   attendeeEmail?: string;
 }
 
+export interface TimedCalendarEventInput {
+  calendarId: string;
+  eventId: string;
+  summary: string;
+  startDateTime: string;
+  endDateTime: string;
+  description?: string;
+  attendeeEmail?: string;
+}
+
 export async function upsertAllDayCalendarEvent(input: AllDayCalendarEventInput): Promise<void> {
   const calendar = createCalendarClient();
   const event = {
@@ -22,19 +32,47 @@ export async function upsertAllDayCalendarEvent(input: AllDayCalendarEventInput)
     description: input.description,
   };
 
+  await upsertCalendarEvent(calendar, input.calendarId, input.eventId, event);
+}
+
+export async function upsertTimedCalendarEvent(input: TimedCalendarEventInput): Promise<void> {
+  const calendar = createCalendarClient();
+  const event = {
+    summary: input.summary,
+    start: {
+      dateTime: input.startDateTime,
+      timeZone: 'Asia/Seoul',
+    },
+    end: {
+      dateTime: input.endDateTime,
+      timeZone: 'Asia/Seoul',
+    },
+    attendees: input.attendeeEmail ? [{ email: input.attendeeEmail }] : undefined,
+    description: input.description,
+  };
+
+  await upsertCalendarEvent(calendar, input.calendarId, input.eventId, event);
+}
+
+async function upsertCalendarEvent(
+  calendar: ReturnType<typeof google.calendar>,
+  calendarId: string,
+  eventId: string,
+  event: Record<string, unknown>,
+): Promise<void> {
   try {
     await calendar.events.patch({
-      calendarId: input.calendarId,
-      eventId: input.eventId,
+      calendarId,
+      eventId,
       requestBody: event,
     });
   } catch (error) {
     if ((error as { code?: number }).code !== 404) throw error;
 
     await calendar.events.insert({
-      calendarId: input.calendarId,
+      calendarId,
       requestBody: {
-        id: input.eventId,
+        id: eventId,
         ...event,
       },
     });
