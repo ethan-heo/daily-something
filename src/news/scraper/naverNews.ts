@@ -3,7 +3,7 @@ import type { NewsItem } from '../../types';
 const NAVER_SOURCE = '네이버';
 const NAVER_NEWS_BASE_URL = 'https://news.naver.com';
 const ARTICLE_URL_PATTERN = /https?:\/\/(?:n\.)?news\.naver\.com\/(?:mnews\/)?article\//i;
-const MAX_ITEMS_PER_CATEGORY = 5;
+const MAX_ITEMS_PER_CATEGORY = 2;
 
 interface FetchNaverNewsParams {
   category: string;
