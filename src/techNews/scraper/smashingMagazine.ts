@@ -1,8 +1,9 @@
-import type { Page } from 'playwright';
+import type { Locator, Page } from 'playwright';
 import type { NewsItem } from '../../types';
 
 const LIST_URL = 'https://www.smashingmagazine.com/articles/';
 const CONTAINER = '.article--post';
+const TITLE_LINK = '.article--post__title a, h1 a, h2 a, h3 a, h4 a';
 const SOURCE = 'Smashing Magazine';
 
 export async function scrapeSmashingMagazine(page: Page, targetDate: string): Promise<NewsItem[]> {
@@ -16,7 +17,7 @@ export async function scrapeSmashingMagazine(page: Page, targetDate: string): Pr
     const publishedAt = await extractPublishedDate(item);
     if (publishedAt !== targetDate) continue;
 
-    const anchor = item.locator('h1 a, h2 a, h3 a, h4 a, a').first();
+    const anchor = item.locator(TITLE_LINK).first();
     const href = await anchor.getAttribute('href');
     if (!href) continue;
 
@@ -30,7 +31,7 @@ export async function scrapeSmashingMagazine(page: Page, targetDate: string): Pr
   return results;
 }
 
-async function extractPublishedDate(item: ReturnType<Page['locator']>): Promise<string | null> {
+async function extractPublishedDate(item: Locator): Promise<string | null> {
   const time = item.locator('time[date], time[datetime]').first();
   if ((await time.count()) === 0) return null;
 
