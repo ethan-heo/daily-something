@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { NewsItem } from '../types';
+import type { NewsItem } from '../../types';
 
 const BASE_URL = 'https://yozm.wishket.com';
 const LIST_URL = `${BASE_URL}/magazine/list/new/`;

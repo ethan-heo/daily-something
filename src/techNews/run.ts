@@ -1,10 +1,10 @@
 import { chromium } from 'playwright';
-import { scrapeCssWeekly } from '../scraper/cssWeekly';
-import { scrapeFrontendWeekly } from '../scraper/frontendWeekly';
-import { scrapeJavaScriptWeekly } from '../scraper/javascriptWeekly';
-import { scrapeNodeWeekly } from '../scraper/nodeWeekly';
-import { scrapeSmashingMagazine } from '../scraper/smashingMagazine';
-import { scrapeYozm } from '../scraper/yozm';
+import { scrapeCssWeekly } from './scraper/cssWeekly';
+import { scrapeFrontendWeekly } from './scraper/frontendWeekly';
+import { scrapeJavaScriptWeekly } from './scraper/javascriptWeekly';
+import { scrapeNodeWeekly } from './scraper/nodeWeekly';
+import { scrapeSmashingMagazine } from './scraper/smashingMagazine';
+import { scrapeYozm } from './scraper/yozm';
 import { getTodayInSeoul } from '../shared/date';
 import { upsertNewsEvent } from './calendar';
 import type { NewsItem } from '../types';

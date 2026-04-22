@@ -53,10 +53,10 @@ Claude API를 호출하여 `RawWordEntry[]`를 `WordEntry[]`로 변환.
 ### `src/vocab/formatter/prompt.ts`
 언어별(`en` / `ja`) 프롬프트를 반환. 프롬프트 변경 시 이 파일만 수정.
 
-### `src/scraper/english.ts` / `src/scraper/japanese.ts`
-언어별 네이버 검색 URL만 정의하고, 실제 스크래핑은 공통 함수 `src/scraper/naverWords.ts`에 위임한다.
+### `src/vocab/scraper/english.ts` / `src/vocab/scraper/japanese.ts`
+언어별 네이버 검색 URL만 정의하고, 실제 스크래핑은 공통 함수 `src/vocab/scraper/naverWords.ts`에 위임한다.
 
-### `src/scraper/naverWords.ts`
+### `src/vocab/scraper/naverWords.ts`
 네이버 오늘의 단어 공통 스크래퍼.
 - 공통 컨테이너 셀렉터에서 단어(`word`)와 의미(`meaning`)를 추출
 - 영어/일본어 스크래퍼가 URL만 넘겨 재사용
@@ -111,7 +111,7 @@ interface DailyWords {
 
 ## 새 언어 추가 방법
 
-1. `src/scraper/`에 새 스크래퍼 파일 추가
+1. `src/vocab/scraper/`에 새 스크래퍼 파일 추가
 2. `src/vocab/formatter/prompt.ts`의 `Language` 타입과 `PROMPTS` 맵에 항목 추가
 3. `src/vocab/run.ts`에서 새 스크래퍼 호출 및 결과 포함
 4. `src/vocab/calendar.ts`의 `buildDescription()`에 새 언어 블록 추가

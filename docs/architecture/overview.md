@@ -22,23 +22,28 @@ src/
 ├── shared/                   # 기능 간 공통 유틸
 │   ├── date.ts               # 서울 기준 날짜 계산
 │   └── googleCalendar.ts     # Google Calendar 종일 이벤트 upsert
-├── scraper/                  # 스크래퍼 (기능 간 공유)
-│   ├── naverWords.ts         # 네이버 오늘의 단어 공통 스크래핑
-│   ├── english.ts            # 네이버 영단어
-│   ├── japanese.ts           # 네이버 일본어 단어
-│   ├── smashingMagazine.ts   # Smashing Magazine 아티클
-│   └── yozm.ts               # 요즘IT 아티클
 ├── vocab/                    # 오늘의 단어 기능
 │   ├── index.ts              # 진입점
 │   ├── run.ts                # 오케스트레이터
 │   ├── calendar.ts           # vocab 설명 생성 + 공통 캘린더 업로드 호출
+│   ├── scraper/
+│   │   ├── naverWords.ts     # 네이버 오늘의 단어 공통 스크래핑
+│   │   ├── english.ts        # 네이버 영단어
+│   │   └── japanese.ts       # 네이버 일본어 단어
 │   └── formatter/
 │       ├── index.ts          # Claude API 호출 및 파싱
 │       └── prompt.ts         # 언어별 프롬프트 정의
 ├── techNews/                 # 당일 기술 뉴스 수집 기능
 │   ├── index.ts              # 진입점
 │   ├── run.ts                # 오케스트레이터
-│   └── calendar.ts           # 기술 뉴스 설명 생성 + 공통 캘린더 업로드 호출
+│   ├── calendar.ts           # 기술 뉴스 설명 생성 + 공통 캘린더 업로드 호출
+│   └── scraper/
+│       ├── smashingMagazine.ts
+│       ├── yozm.ts
+│       ├── javascriptWeekly.ts
+│       ├── frontendWeekly.ts
+│       ├── nodeWeekly.ts
+│       └── cssWeekly.ts
 └── news/                     # 오늘의 일반 뉴스 수집 기능
     ├── index.ts              # 진입점
     ├── run.ts                # 오케스트레이터
@@ -55,7 +60,7 @@ src/
 ## 공통 실행 흐름
 
 ```
-index.ts  →  run.ts  →  scraper/*.ts             (데이터 수집)
+index.ts  →  run.ts  →  각 기능 디렉토리의 scraper/*.ts (데이터 수집)
                      →  shared/date.ts           (서울 기준 날짜 계산)
                      →  calendar.ts              (기능별 description 구성)
                      →  shared/googleCalendar.ts (Google Calendar 업로드)

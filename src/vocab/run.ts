@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import { chromium } from 'playwright';
 import { upsertCalendarEvent } from './calendar';
-import { scrapeEnglishWords } from '../scraper/english';
-import { scrapeJapaneseWords } from '../scraper/japanese';
+import { scrapeEnglishWords } from './scraper/english';
+import { scrapeJapaneseWords } from './scraper/japanese';
 import { getTodayInSeoul } from '../shared/date';
 import type { DailyWords, WordEntry } from '../types';
 

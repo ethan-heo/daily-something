@@ -46,7 +46,7 @@ src/techNews/index.ts
   ```
 - `CALENDAR_ID`를 사용해 캘린더에 업로드
 
-### `src/scraper/yozm.ts`
+### `src/techNews/scraper/yozm.ts`
 - 대상: `https://yozm.wishket.com/magazine/list/new/`
 - 컨테이너 셀렉터: `[data-testid="article-column-item--container"]`
 - 제목: 컨테이너 내 `h1~h4` 첫 번째 요소
@@ -54,35 +54,35 @@ src/techNews/index.ts
 - 상세 페이지 검증: 각 URL에 진입해 `meta[name="date"]`의 `content` 값을 읽고 `YYYY-MM-DD`로 정규화
 - 필터: `src/shared/date.ts` 기준 당일 날짜(KST)와 일치하는 항목만 수집
 
-### `src/scraper/smashingMagazine.ts`
+### `src/techNews/scraper/smashingMagazine.ts`
 - 대상: `https://www.smashingmagazine.com/articles/`
 - 컨테이너 셀렉터: `.article--post`
 - 게시일: 컨테이너 내부 `time[date]` 우선, 없으면 `time[datetime]` fallback
 - 필터: 게시일을 `YYYY-MM-DD`로 정규화한 뒤 `src/shared/date.ts` 기준 당일 날짜(KST)와 일치하는 항목만 수집
 - 제목/URL: 컨테이너 내부 제목 링크(`h1~h4 a`) 기준으로 추출
 
-### `src/scraper/javascriptWeekly.ts`
+### `src/techNews/scraper/javascriptWeekly.ts`
 - 대상 RSS: `https://cprss.s3.amazonaws.com/javascriptweekly.com.xml`
 - 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져와 `<item>` 단위로 파싱
 - 게시일: 각 아이템의 `pubDate`를 서울 시간대 `YYYY-MM-DD`로 정규화
 - 필터: 당일 날짜(KST)와 일치하는 항목만 수집
 - 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
 
-### `src/scraper/frontendWeekly.ts`
+### `src/techNews/scraper/frontendWeekly.ts`
 - 대상 RSS: `https://cprss.s3.amazonaws.com/frontendfoc.us.xml`
 - 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져와 `<item>` 단위로 파싱
 - 게시일: 각 아이템의 `pubDate`를 서울 시간대 `YYYY-MM-DD`로 정규화
 - 필터: 당일 날짜(KST)와 일치하는 항목만 수집
 - 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
 
-### `src/scraper/nodeWeekly.ts`
+### `src/techNews/scraper/nodeWeekly.ts`
 - 대상 RSS: `https://cprss.s3.amazonaws.com/nodeweekly.com.xml`
 - 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져와 `<item>` 단위로 파싱
 - 게시일: 각 아이템의 `pubDate`를 서울 시간대 `YYYY-MM-DD`로 정규화
 - 필터: 당일 날짜(KST)와 일치하는 항목만 수집
 - 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
 
-### `src/scraper/cssWeekly.ts`
+### `src/techNews/scraper/cssWeekly.ts`
 - 대상 RSS: `https://feedpress.me/cssweekly`
 - 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져온 뒤, 당일 날짜(KST)와 일치하는 `Issue #...` / `Newsletter` 아이템 1건을 선택
 - 본문 파싱: `content:encoded` HTML을 섹션 단위로 분리하고 `Headlines`, `Quick Tips`, `Articles`, `Tools`, `Inspiration` 구간의 `h3 a` 링크를 추출
@@ -126,7 +126,7 @@ interface NewsItem {
 
 ## 새 스크래퍼 추가 방법
 
-1. `src/scraper/`에 새 파일 생성 (`(page: Page, targetDate: string) => Promise<NewsItem[]>` 시그니처)
+1. `src/techNews/scraper/`에 새 파일 생성 (`(page: Page, targetDate: string) => Promise<NewsItem[]>` 시그니처)
 2. `src/techNews/run.ts`의 `scrapers` 배열에 추가
 3. 공통 날짜/캘린더 동작이 필요하면 `src/shared/` 유틸을 재사용
 

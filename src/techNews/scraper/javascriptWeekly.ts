@@ -1,14 +1,14 @@
 import type { Page } from 'playwright';
-import type { NewsItem } from '../types';
+import type { NewsItem } from '../../types';
 
-const FEED_URL = 'https://cprss.s3.amazonaws.com/nodeweekly.com.xml';
-const SOURCE = 'Node Weekly';
+const FEED_URL = 'https://cprss.s3.amazonaws.com/javascriptweekly.com.xml';
+const SOURCE = 'JavaScript Weekly';
 
-export async function scrapeNodeWeekly(_page: Page, targetDate: string): Promise<NewsItem[]> {
+export async function scrapeJavaScriptWeekly(_page: Page, targetDate: string): Promise<NewsItem[]> {
   const response = await fetch(FEED_URL);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch Node Weekly RSS: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to fetch JavaScript Weekly RSS: ${response.status} ${response.statusText}`);
   }
 
   const xml = await response.text();

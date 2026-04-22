@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { NewsItem } from '../types';
+import type { NewsItem } from '../../types';
 
 const LIST_URL = 'https://www.smashingmagazine.com/articles/';
 const CONTAINER = '.article--post';

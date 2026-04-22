@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { NewsItem } from '../types';
+import type { NewsItem } from '../../types';
 
 const FEED_URL = 'https://feedpress.me/cssweekly';
 const SOURCE = 'CSS Weekly';

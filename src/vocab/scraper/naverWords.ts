@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { RawWordEntry } from '../types';
+import type { RawWordEntry } from '../../types';
 
 const CONTAINER = '.sc_new.cs_dicstudy._fe_language_study';
 
