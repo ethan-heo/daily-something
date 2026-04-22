@@ -29,8 +29,8 @@ src/techNews/index.ts
 진입점. 수집된 아이템이 없으면 캘린더 업로드 없이 종료한다.
 
 ### `src/techNews/run.ts`
-- `collectNews()`: Playwright 브라우저를 열고 스크래퍼별 새 페이지를 만든 뒤 `Promise.all`로 병렬 실행. 당일 날짜(KST)를 기준으로 수집하고 URL 기준으로 중복 제거 후 반환
-- 기준 날짜(KST)는 `src/shared/date.ts`의 `getTodayInSeoul()`로 계산
+- `collectNews()`: Playwright 브라우저를 열고 스크래퍼별 새 페이지를 만든 뒤 `Promise.all`로 병렬 실행. 기준 날짜를 기준으로 수집하고 URL 기준으로 중복 제거 후 반환
+- 기준 날짜는 `TECH_NEWS_TARGET_DATE`가 있으면 해당 값(`YYYY-MM-DD`), 없으면 `src/shared/date.ts`의 `getTodayInSeoul()`로 계산
 - `saveNews()`: calendar.ts의 `upsertNewsEvent()` 호출
 
 ### `src/techNews/calendar.ts`
@@ -121,6 +121,7 @@ interface NewsItem {
 | `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` or `GOOGLE_SERVICE_ACCOUNT_KEY_PATH` | Google 서비스 계정 인증 |
 | `CALENDAR_ID` | 기본 Google Calendar ID |
 | `ATTENDEE_EMAIL` | (선택) 이벤트 초대할 이메일 |
+| `TECH_NEWS_TARGET_DATE` | (선택) 재수집/재업로드할 기준 날짜 (`YYYY-MM-DD`) |
 
 ---
 

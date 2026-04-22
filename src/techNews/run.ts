@@ -20,7 +20,7 @@ const scrapers = [
 
 export async function collectNews(): Promise<{ date: string; items: NewsItem[] }> {
   const browser = await chromium.launch({ headless: true });
-  const targetDate = getTodayInSeoul();
+  const targetDate = getTargetDate();
 
   try {
     const results = await Promise.all(
@@ -40,6 +40,17 @@ export async function collectNews(): Promise<{ date: string; items: NewsItem[] }
   } finally {
     await browser.close();
   }
+}
+
+function getTargetDate(): string {
+  const overrideDate = process.env.TECH_NEWS_TARGET_DATE?.trim();
+  if (!overrideDate) return getTodayInSeoul();
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(overrideDate)) {
+    throw new Error('TECH_NEWS_TARGET_DATE must be in YYYY-MM-DD format');
+  }
+
+  return overrideDate;
 }
 
 export async function saveNews(date: string, items: NewsItem[]): Promise<void> {
