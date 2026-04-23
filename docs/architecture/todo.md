@@ -146,7 +146,7 @@ export interface NotionTodoItem {
 ## GitHub Actions
 
 - 워크플로 파일: `.github/workflows/daily-todo.yml`
-- 실행 시각: 매일 **00:00 KST** (전일 15:00 UTC) — 자정에 당일 할 일 전체 동기화
+- 실행 시각: 매일 **06:00 KST** (전일 21:00 UTC) — 오전에 당일 할 일 전체 동기화
 - 트리거: `schedule` + `workflow_dispatch`
 
 ---
