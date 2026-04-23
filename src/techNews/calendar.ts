@@ -2,9 +2,9 @@ import type { NewsItem } from '../types';
 import { upsertAllDayCalendarEvent } from '../shared/googleCalendar';
 
 export async function upsertNewsEvent(date: string, items: NewsItem[]): Promise<void> {
-  const calendarId = process.env.CALENDAR_ID;
+  const calendarId = process.env.ETHAN_CALENDAR_ID;
 
-  if (!calendarId) throw new Error('CALENDAR_ID is required');
+  if (!calendarId) throw new Error('ETHAN_CALENDAR_ID is required');
 
   // Google Calendar event IDs only allow base32hex chars (0-9, a-v). "technews" contains 'w' which is invalid.
   await upsertAllDayCalendarEvent({

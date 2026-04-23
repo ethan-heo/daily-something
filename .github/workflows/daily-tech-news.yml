@@ -30,6 +30,6 @@ jobs:
       - name: Run daily tech news
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
-          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+          ETHAN_CALENDAR_ID: ${{ secrets.ETHAN_CALENDAR_ID }}
           ATTENDEE_EMAIL: ${{ secrets.ATTENDEE_EMAIL }}
         run: npm run start:tech-news

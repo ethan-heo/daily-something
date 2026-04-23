@@ -44,7 +44,7 @@ src/techNews/index.ts
   [소스명] 아티클 제목
   https://...
   ```
-- `CALENDAR_ID`를 사용해 캘린더에 업로드
+- `ETHAN_CALENDAR_ID`를 사용해 캘린더에 업로드
 
 ### `src/techNews/scraper/yozm.ts`
 - 대상: `https://yozm.wishket.com/magazine/list/new/`
@@ -119,7 +119,7 @@ interface NewsItem {
 | 변수 | 설명 |
 |------|------|
 | `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` or `GOOGLE_SERVICE_ACCOUNT_KEY_PATH` | Google 서비스 계정 인증 |
-| `CALENDAR_ID` | 기본 Google Calendar ID |
+| `ETHAN_CALENDAR_ID` | tech news 전용 Google Calendar ID |
 | `ATTENDEE_EMAIL` | (선택) 이벤트 초대할 이메일 |
 | `TECH_NEWS_TARGET_DATE` | (선택) 재수집/재업로드할 기준 날짜 (`YYYY-MM-DD`) |
 

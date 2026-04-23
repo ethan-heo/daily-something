@@ -119,7 +119,7 @@ GitHub Actions 워크플로는 기능별로 분리한다.
 |------|------|------|
 | `GOOGLE_SERVICE_ACCOUNT_KEY_JSON` | vocab/tech-news/news 공통 | 서비스 계정 키 JSON 문자열 (GitHub Actions용) |
 | `GOOGLE_SERVICE_ACCOUNT_KEY_PATH` | 로컬 개발용 | 서비스 계정 키 파일 경로 |
-| `CALENDAR_ID` | vocab/tech-news/news 공통 | Google Calendar ID |
+| `CALENDAR_ID` | vocab/news 공통 | Google Calendar ID |
 | `DAILY_NEWS_CALENDAR_ID` | news 선택 | news 전용 캘린더 ID. 없으면 `NEWS_CALENDAR_ID`, `CALENDAR_ID` 순서로 사용 |
 | `NEWS_CALENDAR_ID` | news 선택 | news 전용 캘린더 ID. 없으면 `CALENDAR_ID` 사용 |
 | `ATTENDEE_EMAIL` | 선택 | 이벤트 초대 이메일 |
@@ -128,7 +128,7 @@ GitHub Actions 워크플로는 기능별로 분리한다.
 | `NOTION_API_KEY` | todo 전용 | Notion Integration 시크릿 토큰 |
 | `NOTION_TODO_DATABASE_ID` | todo 전용 | 대상 Notion DB ID |
 | `NOTION_TODO_STATUS_VALUES` | todo 선택 | 업서트 대상 Status 목록. 기본값: `"할 일,진행 중"` |
-| `ETHAN_CALENDAR_ID` | todo 전용 | todo 전용 Google Calendar ID |
+| `ETHAN_CALENDAR_ID` | tech-news/todo 전용 | tech-news, todo 전용 Google Calendar ID |
 
 ---
 
