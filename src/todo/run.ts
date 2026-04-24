@@ -1,7 +1,9 @@
 import { getTodayInSeoul } from '../shared/date';
 import type { NotionTodoItem } from '../types';
 import { upsertTodoEvent } from './calendar';
-import { queryTodosFromNotion } from './notionClient';
+import { markTodoInProgress, queryTodosFromNotion } from './notionClient';
+
+const TODO_STATUS = '할 일';
 
 export async function fetchTodayTodos(): Promise<{ date: string; items: NotionTodoItem[] }> {
   const date = getTodayInSeoul();
@@ -12,6 +14,11 @@ export async function fetchTodayTodos(): Promise<{ date: string; items: NotionTo
 
 export async function upsertTodoEvents(items: NotionTodoItem[]): Promise<void> {
   for (const item of items) {
+    if (item.status === TODO_STATUS) {
+      await markTodoInProgress(item.pageId);
+      item.status = '진행 중';
+    }
+
     await upsertTodoEvent(item);
   }
 }

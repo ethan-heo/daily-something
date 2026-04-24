@@ -4,23 +4,14 @@ import type { NotionTodoItem } from '../types';
 const DEFAULT_DATE_PROPERTY = '날짜';
 const DEFAULT_STATUS_PROPERTY = 'Status';
 const DEFAULT_TODO_STATUSES = ['할 일', '진행 중'];
+const TODO_STATUS = '할 일';
+const IN_PROGRESS_STATUS = '진행 중';
 
 export async function queryTodosFromNotion(date: string): Promise<NotionTodoItem[]> {
-  const apiKey = process.env.NOTION_API_KEY;
-  const databaseId = process.env.NOTION_TODO_DATABASE_ID;
-
-  if (!apiKey) {
-    throw new Error('NOTION_API_KEY is required');
-  }
-
-  if (!databaseId) {
-    throw new Error('NOTION_TODO_DATABASE_ID is required');
-  }
-
-  const notion = new Client({ auth: apiKey });
-  const dataSourceId = await resolveDataSourceId(notion, databaseId);
-  const statusProperty = process.env.NOTION_STATUS_PROPERTY || DEFAULT_STATUS_PROPERTY;
-  const dateProperty = process.env.NOTION_DATE_PROPERTY || DEFAULT_DATE_PROPERTY;
+  const notion = createNotionClient();
+  const dataSourceId = await resolveDataSourceId(notion, getTodoDatabaseId());
+  const statusProperty = getStatusPropertyName();
+  const dateProperty = getDatePropertyName();
   const todoStatusValues = getTodoStatusValues();
 
   const results = await collectPaginatedAPI(notion.dataSources.query, {
@@ -60,8 +51,24 @@ export async function queryTodosFromNotion(date: string): Promise<NotionTodoItem
 
   return results
     .filter(isFullPage)
-    .map((page) => mapPageToTodoItem(page, dateProperty))
+    .map((page) => mapPageToTodoItem(page, dateProperty, statusProperty))
     .filter((item): item is NotionTodoItem => item !== null);
+}
+
+export async function markTodoInProgress(pageId: string): Promise<void> {
+  const notion = createNotionClient();
+  const statusProperty = getStatusPropertyName();
+
+  await notion.pages.update({
+    page_id: pageId,
+    properties: {
+      [statusProperty]: {
+        status: {
+          name: IN_PROGRESS_STATUS,
+        },
+      },
+    },
+  });
 }
 
 async function resolveDataSourceId(notion: Client, databaseId: string): Promise<string> {
@@ -74,21 +81,37 @@ async function resolveDataSourceId(notion: Client, databaseId: string): Promise<
   return database.data_sources[0].id;
 }
 
-function mapPageToTodoItem(page: PageObjectResponse, datePropertyName: string): NotionTodoItem | null {
+function mapPageToTodoItem(
+  page: PageObjectResponse,
+  datePropertyName: string,
+  statusPropertyName: string,
+): NotionTodoItem | null {
   const title = extractTitle(page);
   const dateRange = page.properties[datePropertyName];
+  const status = extractStatus(page, statusPropertyName);
 
-  if (!dateRange || dateRange.type !== 'date' || !dateRange.date?.start) {
+  if (!dateRange || dateRange.type !== 'date' || !dateRange.date?.start || !status) {
     return null;
   }
 
   return {
     pageId: page.id,
     title,
+    status,
     startDateTime: dateRange.date.start,
     endDateTime: dateRange.date.end ?? undefined,
     pageUrl: page.url,
   };
+}
+
+function extractStatus(page: PageObjectResponse, statusPropertyName: string): string | null {
+  const statusProperty = page.properties[statusPropertyName];
+
+  if (!statusProperty || statusProperty.type !== 'status' || !statusProperty.status?.name) {
+    return null;
+  }
+
+  return statusProperty.status.name;
 }
 
 function getTodoStatusValues(): string[] {
@@ -102,6 +125,34 @@ function getTodoStatusValues(): string[] {
     .split(',')
     .map((value) => value.trim())
     .filter(Boolean);
+}
+
+function getTodoDatabaseId(): string {
+  const databaseId = process.env.NOTION_TODO_DATABASE_ID;
+
+  if (!databaseId) {
+    throw new Error('NOTION_TODO_DATABASE_ID is required');
+  }
+
+  return databaseId;
+}
+
+function getDatePropertyName(): string {
+  return process.env.NOTION_DATE_PROPERTY || DEFAULT_DATE_PROPERTY;
+}
+
+function getStatusPropertyName(): string {
+  return process.env.NOTION_STATUS_PROPERTY || DEFAULT_STATUS_PROPERTY;
+}
+
+function createNotionClient(): Client {
+  const apiKey = process.env.NOTION_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('NOTION_API_KEY is required');
+  }
+
+  return new Client({ auth: apiKey });
 }
 
 function extractTitle(page: PageObjectResponse): string {

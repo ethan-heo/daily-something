@@ -36,6 +36,7 @@ export interface DailyWords {
 export interface NotionTodoItem {
   pageId: string;
   title: string;
+  status: string;
   startDateTime: string;
   endDateTime?: string;
   pageUrl: string;
