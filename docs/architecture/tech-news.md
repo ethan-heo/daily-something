@@ -47,12 +47,11 @@ src/techNews/index.ts
 - `ETHAN_CALENDAR_ID`를 사용해 캘린더에 업로드
 
 ### `src/techNews/scraper/yozm.ts`
-- 대상: `https://yozm.wishket.com/magazine/list/new/`
-- 컨테이너 셀렉터: `[data-testid="article-column-item--container"]`
-- 제목: 컨테이너 내 `h1~h4` 첫 번째 요소
-- URL: 컨테이너 내 첫 번째 `<a>` 태그의 `href` → 절대 URL로 변환
-- 상세 페이지 검증: 각 URL에 진입해 `meta[name="date"]`의 `content` 값을 읽고 `YYYY-MM-DD`로 정규화
-- 필터: `src/shared/date.ts` 기준 당일 날짜(KST)와 일치하는 항목만 수집
+- 대상 RSS: `https://yozm.wishket.com/magazine/feed/`
+- 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져와 `<item>` 단위로 파싱
+- 게시일: 각 아이템의 링크 상세 페이지 HTML을 받아 `meta[name="date"]` 값을 읽고 `YYYY-MM-DD`로 정규화
+- 필터: 당일 날짜(KST)와 일치하는 항목만 수집
+- 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
 
 ### `src/techNews/scraper/smashingMagazine.ts`
 - 대상: `https://www.smashingmagazine.com/articles/`
