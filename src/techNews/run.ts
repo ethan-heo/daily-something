@@ -9,6 +9,8 @@ import { getTodayInSeoul } from '../shared/date';
 import { upsertNewsEvent } from './calendar';
 import type { NewsItem } from '../types';
 
+type Scraper = (page: import('playwright').Page, targetDate: string) => Promise<NewsItem[]>;
+
 const scrapers = [
   scrapeYozm,
   scrapeSmashingMagazine,
@@ -16,7 +18,7 @@ const scrapers = [
   scrapeFrontendWeekly,
   scrapeNodeWeekly,
   scrapeCssWeekly,
-];
+] satisfies Scraper[];
 
 export async function collectNews(): Promise<{ date: string; items: NewsItem[] }> {
   const browser = await chromium.launch({ headless: true });
@@ -29,6 +31,9 @@ export async function collectNews(): Promise<{ date: string; items: NewsItem[] }
 
         try {
           return await scraper(page, targetDate);
+        } catch (error) {
+          console.warn(`Skipping ${scraper.name} due to scraper error: ${formatError(error)}`);
+          return [];
         } finally {
           await page.close();
         }
@@ -55,6 +60,11 @@ function getTargetDate(): string {
 
 export async function saveNews(date: string, items: NewsItem[]): Promise<void> {
   await upsertNewsEvent(date, items);
+}
+
+function formatError(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error);
 }
 
 function deduplicateByUrl(items: NewsItem[]): NewsItem[] {

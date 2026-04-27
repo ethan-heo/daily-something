@@ -3,9 +3,18 @@ import type { NewsItem } from '../../types';
 
 const FEED_URL = 'https://yozm.wishket.com/magazine/feed/';
 const SOURCE = '요즘IT';
+const REQUEST_TIMEOUT_MS = 15000;
+const REQUEST_HEADERS = {
+  'Accept': 'application/rss+xml, application/xml;q=0.9, text/xml;q=0.8, text/html;q=0.7',
+  'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+  'Cache-Control': 'no-cache',
+  'Pragma': 'no-cache',
+  'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+};
 
 export async function scrapeYozm(_page: Page, targetDate: string): Promise<NewsItem[]> {
-  const response = await fetch(FEED_URL);
+  const response = await fetchYozm(FEED_URL);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch Yozm RSS: ${response.status} ${response.statusText}`);
@@ -71,7 +80,7 @@ function normalizeUrl(value: string): string {
 }
 
 async function extractPublishedDate(url: string): Promise<string | null> {
-  const response = await fetch(url);
+  const response = await fetchYozm(url);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch Yozm article: ${response.status} ${response.statusText}`);
@@ -81,6 +90,20 @@ async function extractPublishedDate(url: string): Promise<string | null> {
   const metaDate = extractMetaDate(html);
 
   return normalizeDate(metaDate);
+}
+
+async function fetchYozm(url: string): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    return await fetch(url, {
+      headers: REQUEST_HEADERS,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function extractMetaDate(html: string): string {
