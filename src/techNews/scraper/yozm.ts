@@ -14,7 +14,7 @@ const REQUEST_HEADERS = {
 };
 
 export async function scrapeYozm(_page: Page, targetDate: string): Promise<NewsItem[]> {
-  const response = await fetchYozm(FEED_URL);
+  const response = await fetchYozm(withCacheBust(FEED_URL));
 
   if (!response.ok) {
     throw new Error(`Failed to fetch Yozm RSS: ${response.status} ${response.statusText}`);
@@ -58,6 +58,8 @@ function stripCdata(value: string): string {
 function normalizeDate(value: string): string | null {
   if (!value) return null;
 
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return null;
 
@@ -77,6 +79,12 @@ function normalizeUrl(value: string): string {
   } catch {
     return '';
   }
+}
+
+function withCacheBust(url: string): string {
+  const cacheBustedUrl = new URL(url);
+  cacheBustedUrl.searchParams.set('_', Date.now().toString());
+  return cacheBustedUrl.toString();
 }
 
 async function extractPublishedDate(url: string): Promise<string | null> {
@@ -107,8 +115,15 @@ async function fetchYozm(url: string): Promise<Response> {
 }
 
 function extractMetaDate(html: string): string {
-  const match = html.match(/<meta\s+name="date"\s+content="([^"]+)"/i);
-  return match?.[1]?.trim() ?? '';
+  for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const tag = match[0];
+    const name = extractAttribute(tag, 'name');
+    if (name !== 'date') continue;
+
+    return extractAttribute(tag, 'content').trim();
+  }
+
+  return '';
 }
 
 function decodeXml(value: string): string {
@@ -124,4 +139,10 @@ function decodeXml(value: string): string {
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function extractAttribute(tag: string, attributeName: string): string {
+  const escapedAttributeName = escapeRegExp(attributeName);
+  const match = tag.match(new RegExp(`\\b${escapedAttributeName}\\s*=\\s*(['"])(.*?)\\1`, 'i'));
+  return match?.[2] ?? '';
 }

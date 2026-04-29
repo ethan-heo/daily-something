@@ -10,14 +10,10 @@
 
 ```
 src/techNews/index.ts
-  └─ collectNews()              # 모든 스크래퍼 병렬 실행 + 중복 제거
-       └─ scrapeYozm(page, targetDate) # 요즘IT 기준일 아티클 스크래핑
-       └─ scrapeSmashingMagazine(page, targetDate) # Smashing Magazine 기준일 게시물 스크래핑
-       └─ scrapeJavaScriptWeekly(page, targetDate) # JavaScript Weekly RSS 기준일 게시물 수집
-       └─ scrapeFrontendWeekly(page, targetDate) # Frontend Weekly RSS 기준일 게시물 수집
-       └─ scrapeNodeWeekly(page, targetDate) # Node Weekly RSS 기준일 게시물 수집
-       └─ scrapeCssWeekly(page, targetDate) # CSS Weekly RSS 기준일 뉴스레터 본문 파싱
-  └─ items.length === 0 → 종료  # 수집 결과 없으면 캘린더 업로드 생략
+  └─ collectNews()              # daily/weekly 스크래퍼 병렬 실행 + 업로드 날짜로 중복 제거
+       ├─ dailyScrapers         # 요즘IT, Smashing Magazine: 실행일만 수집
+       └─ weeklyScrapers        # JavaScript/Frontend/Node/CSS Weekly: 전날+실행일 수집
+  └─ items.length === 0 → 캘린더 업로드 생략
   └─ saveNews()                 # Google Calendar upsert
 ```
 
@@ -29,8 +25,8 @@ src/techNews/index.ts
 진입점. 수집된 아이템이 없으면 캘린더 업로드 없이 종료한다.
 
 ### `src/techNews/run.ts`
-- `collectNews()`: Playwright 브라우저를 열고 스크래퍼별 새 페이지를 만든 뒤 `Promise.all`로 병렬 실행. 기준 날짜를 기준으로 수집하고 URL 기준으로 중복 제거 후 반환
-- 기준 날짜는 `TECH_NEWS_TARGET_DATE`가 있으면 해당 값(`YYYY-MM-DD`), 없으면 `src/shared/date.ts`의 `getTodayInSeoul()`로 계산
+- `collectNews()`: Playwright 브라우저를 열고 daily/weekly 스크래퍼를 병렬 실행한다. 요즘IT와 Smashing Magazine은 실행일만 수집하고, Weekly 계열은 전날+실행일을 수집한다. 수집된 아이템은 실행일 캘린더 이벤트에 합치고 URL 기준으로 중복 제거 후 반환
+- `TECH_NEWS_TARGET_DATE`가 있으면 daily/weekly 모두 해당 값(`YYYY-MM-DD`) 1건만 수집하고, 해당 날짜 이벤트에 업서트한다
 - `saveNews()`: calendar.ts의 `upsertNewsEvent()` 호출
 
 ### `src/techNews/calendar.ts`
