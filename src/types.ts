@@ -6,13 +6,6 @@ export interface NewsItem {
   publishedAt?: string;
 }
 
-export interface NewsLink {
-  title: string;
-  url: string;
-  source?: string;
-  category?: string;
-}
-
 export interface RawWordEntry {
   word: string;
   meaning: string;

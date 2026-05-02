@@ -131,7 +131,7 @@ export const DISTRICT_NOTICE_CATEGORIES: DistrictNoticeCategory[] = [
 - 방식: `fetch()`로 HTML 가져오기 → 정규식으로 BBS 테이블 파싱
 - 날짜 필터: 날짜 컬럼(`YYYY.MM.DD` / `YYYY-MM-DD` 포맷)과 `targetDate` 비교
 - URL: `<a href>` 상대경로를 `https://www.nowon.kr` 기준 절대 URL로 변환
-- 인코딩: charset 감지 후 EUC-KR 대응 (`naverNews.ts` 패턴 동일)
+- 인코딩: charset 감지 후 EUC-KR 대응
 - 반환: `source: '노원구'`로 설정된 `NewsItem[]`
 
 #### 페이지네이션 고려 사항
@@ -265,7 +265,7 @@ export async function upsertDistrictNoticeEvent(
 링크: https://...
 ```
 
-> `news/calendar.ts`의 카테고리 분리 패턴과 동일한 방식. `buildDescription(items, sourceCount)`에서 `sourceCount > 1`이면 섹션 헤더를 출력한다.
+> `buildDescription(items, sourceCount)`에서 `sourceCount > 1`이면 `source` 필드 기준 섹션 헤더를 출력한다.
 
 ---
 
