@@ -62,7 +62,7 @@ function parseYp21Page(
     const anchorMatch = cells[1].match(/<a\b[^>]*href=(['"])(.*?)\1[^>]*>([\s\S]*?)<\/a>/i);
     if (!anchorMatch) continue;
 
-    const title = toText(anchorMatch[3]);
+    const title = normalizeYp21Title(toText(anchorMatch[3]));
     const href = decodeHtmlEntities(anchorMatch[2]).trim();
     const url = toAbsoluteUrl(href);
 
@@ -71,6 +71,10 @@ function parseYp21Page(
   }
 
   return { pageItems, shouldStop: sawOlderItem };
+}
+
+function normalizeYp21Title(title: string): string {
+  return title.replace(/\s*새글\s*$/u, '').trim();
 }
 
 function buildListUrl({ bbsNo, key, pageIndex }: { bbsNo: number; key: number; pageIndex: number }): string {
