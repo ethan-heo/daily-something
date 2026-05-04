@@ -6,3 +6,5 @@
 - [Vocab 기능 아키텍처](docs/architecture/vocab.md)
 - [Tech News 기능 아키텍처](docs/architecture/tech-news.md)
 - [Todo 기능 아키텍처](docs/architecture/todo.md)
+- [district 기능 아키텍처](docs/architecture/district-notice.md)
+
