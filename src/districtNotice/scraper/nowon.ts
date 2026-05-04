@@ -9,7 +9,6 @@ import {
 } from './html';
 
 const NOWON_URL = 'https://www.nowon.kr/www/user/bbs/BD_selectBbsList.do?q_bbsCode=1001&q_estnColumn1=11';
-const NOWON_BASE_URL = 'https://www.nowon.kr';
 const SOURCE = '노원구';
 
 export async function scrapeNowon(targetDate: string): Promise<NewsItem[]> {
@@ -40,7 +39,7 @@ export async function scrapeNowon(targetDate: string): Promise<NewsItem[]> {
 
 function toAbsoluteUrl(href: string): string | null {
   try {
-    return new URL(href, NOWON_BASE_URL).toString();
+    return new URL(href, NOWON_URL).toString();
   } catch {
     return null;
   }
