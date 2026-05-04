@@ -3,6 +3,7 @@ import { scrapeCssWeekly } from './scraper/cssWeekly';
 import { scrapeFrontendWeekly } from './scraper/frontendWeekly';
 import { scrapeJavaScriptWeekly } from './scraper/javascriptWeekly';
 import { scrapeNodeWeekly } from './scraper/nodeWeekly';
+import { scrapeReactStatus } from './scraper/reactStatus';
 import { scrapeSmashingMagazine } from './scraper/smashingMagazine';
 import { scrapeYozm } from './scraper/yozm';
 import { getTodayInSeoul, getYesterdayInSeoul } from '../shared/date';
@@ -21,6 +22,7 @@ const weeklyScrapers = [
   scrapeFrontendWeekly,
   scrapeNodeWeekly,
   scrapeCssWeekly,
+  scrapeReactStatus,
 ] satisfies Scraper[];
 
 export interface TechNewsCollection {

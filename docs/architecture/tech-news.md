@@ -12,7 +12,7 @@
 src/techNews/index.ts
   └─ collectNews()              # daily/weekly 스크래퍼 병렬 실행 + 업로드 날짜로 중복 제거
        ├─ dailyScrapers         # 요즘IT, Smashing Magazine: 실행일만 수집
-       └─ weeklyScrapers        # JavaScript/Frontend/Node/CSS Weekly: 전날+실행일 수집
+       └─ weeklyScrapers        # JavaScript/Frontend/Node/CSS Weekly, React Status: 전날+실행일 수집
   └─ items.length === 0 → 캘린더 업로드 생략
   └─ saveNews()                 # Google Calendar upsert
 ```
@@ -25,7 +25,7 @@ src/techNews/index.ts
 진입점. 수집된 아이템이 없으면 캘린더 업로드 없이 종료한다.
 
 ### `src/techNews/run.ts`
-- `collectNews()`: Playwright 브라우저를 열고 daily/weekly 스크래퍼를 병렬 실행한다. 요즘IT와 Smashing Magazine은 실행일만 수집하고, Weekly 계열은 전날+실행일을 수집한다. 수집된 아이템은 실행일 캘린더 이벤트에 합치고 URL 기준으로 중복 제거 후 반환
+- `collectNews()`: Playwright 브라우저를 열고 daily/weekly 스크래퍼를 병렬 실행한다. 요즘IT와 Smashing Magazine은 실행일만 수집하고, Weekly 계열 및 React Status는 전날+실행일을 수집한다. 수집된 아이템은 실행일 캘린더 이벤트에 합치고 URL 기준으로 중복 제거 후 반환
 - `TECH_NEWS_TARGET_DATE`가 있으면 daily/weekly 모두 해당 값(`YYYY-MM-DD`) 1건만 수집하고, 해당 날짜 이벤트에 업서트한다
 - `saveNews()`: calendar.ts의 `upsertNewsEvent()` 호출
 
@@ -84,6 +84,13 @@ src/techNews/index.ts
 - 제외 규칙: 스폰서/유튜브/친구 소개 섹션과 광고성 URL(`youtube.com`, `youtu.be`, `cssw.io` 등)은 제외
 - URL 정리: 기사 링크의 `utm_*` 쿼리 파라미터 제거 후 `NewsItem[]`로 반환
 
+### `src/techNews/scraper/reactStatus.ts`
+- 대상 RSS: `https://react.statuscode.com/rss/`
+- 방식: Playwright 페이지 대신 `fetch()`로 RSS XML을 가져와 `<item>` 단위로 파싱
+- 게시일: 각 아이템의 `pubDate`를 서울 시간대 `YYYY-MM-DD`로 정규화
+- 필터: 당일 날짜(KST)와 일치하는 항목만 수집
+- 제목/URL: 각 아이템의 `title`, `link` 태그에서 추출
+
 ### `src/shared/date.ts`
 서울 기준 오늘/전날/다음 날짜를 `YYYY-MM-DD` 형식으로 계산하는 공통 유틸. tech news는 이 중 `getTodayInSeoul()`를 사용한다.
 
@@ -135,6 +142,7 @@ const scrapers = [
   scrapeFrontendWeekly,
   scrapeNodeWeekly,
   scrapeCssWeekly,
+  scrapeReactStatus,
   scrapeNewSource,
 ];
 ```

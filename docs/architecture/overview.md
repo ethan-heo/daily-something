@@ -9,7 +9,7 @@
 | 기능 | 설명 | 스크립트 |
 |------|------|----------|
 | `vocab` | 네이버 오늘의 영단어/일본어 → Claude API로 예문 생성 → 캘린더 등록 | `npm run start:vocab` |
-| `tech-news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly / CSS Weekly 당일 게시물 수집 → 캘린더 등록 | `npm run start:tech-news` |
+| `tech-news` | 요즘IT / Smashing Magazine / JavaScript Weekly / Frontend Weekly / Node Weekly / CSS Weekly / React Status 당일 게시물 수집 → 캘린더 등록 | `npm run start:tech-news` |
 | `district-notice` | 지자체 공지사항 오늘자 게시물 수집 → 카테고리별 캘린더 등록 | `npm run start:district-notice` |
 | `todo` | Notion DB에서 Status="할 일"/"진행 중" & 오늘 날짜 항목 수집 → `end`가 있으면 시간 지정, 없으면 종일 이벤트로 캘린더 업서트 | `npm run start:todo` |
 
@@ -44,7 +44,8 @@ src/
 │       ├── javascriptWeekly.ts
 │       ├── frontendWeekly.ts
 │       ├── nodeWeekly.ts
-│       └── cssWeekly.ts
+│       ├── cssWeekly.ts
+│       └── reactStatus.ts
 ├── districtNotice/           # 지자체 공지사항 수집 기능
 │   ├── index.ts              # 진입점
 │   ├── run.ts                # 카테고리별 병렬 오케스트레이터
