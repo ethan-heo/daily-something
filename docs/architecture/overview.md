@@ -105,7 +105,7 @@ GitHub Actions 워크플로는 기능별로 분리한다.
 - `daily-district-notice.yml`: district notice 전용
 - `daily-todo.yml`: todo 전용
 - vocab 실행 시각: 매일 **05:30 KST** (전일 20:30 UTC)
-- tech-news 실행 시각: 매일 **09:10 KST** (00:10 UTC), **18:00 KST** (09:00 UTC), **23:00 KST** (14:00 UTC)
+- tech-news 실행 시각: 매일 **09:10 KST** (00:10 UTC), **18:07 KST** (09:07 UTC), **23:13 KST** (14:13 UTC)
 - district notice 실행 시각: 매일 **18:00 KST** (09:00 UTC)
 - todo 실행 시각: 매일 **06:00 KST** (전일 21:00 UTC)
 - 트리거: 각 워크플로별 `schedule` + `workflow_dispatch`

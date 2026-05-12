@@ -4,10 +4,10 @@ on:
   schedule:
     # 매일 오전 9시 10분 KST (= 00:10 UTC)
     - cron: '10 0 * * *'
-    # 매일 오후 6시 00분 KST (= 09:00 UTC)
-    - cron: '0 9 * * *'
-    # 매일 오후 11시 00분 KST (= 14:00 UTC)
-    - cron: '0 14 * * *'
+    # 매일 오후 6시 07분 KST (= 09:07 UTC)
+    - cron: '7 9 * * *'
+    # 매일 오후 11시 13분 KST (= 14:13 UTC)
+    - cron: '13 14 * * *'
   workflow_dispatch:
 
 jobs:
