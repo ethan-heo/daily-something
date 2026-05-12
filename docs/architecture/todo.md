@@ -35,8 +35,9 @@ src/todo/index.ts
 ### `src/todo/notionClient.ts`
 - `@notionhq/client`로 Notion API 클라이언트 생성
 - `queryTodosFromNotion(date: string): Promise<NotionTodoItem[]>` 구현
-  - 필터: `(Status == "할 일" OR Status == "진행 중")` AND `date.is_not_empty == true` AND `date.on_or_before(date)` AND `date.on_or_after(date)`
-  - `on_or_before`는 `end` 기준, `on_or_after`는 `start` 기준으로 비교 → 오늘이 범위 내 항목만 반환
+  - Notion 서버 필터: `(Status == "할 일" OR Status == "진행 중")` AND `date.is_not_empty == true`
+  - 서버 응답을 받은 뒤 로컬에서 KST 기준 `date` 하루 구간과 겹치는 항목만 반환
+  - 시간 포함 Notion 날짜가 UTC 기준으로 전날에 속해도 KST 기준 오늘이면 포함
   - 날짜 속성이 없거나 `start`가 비어 있는 항목은 안전하게 제외
   - 응답에서 `title`, `status`, `date.start`, `date.end`, `pageId` 추출
 - `markTodoInProgress(pageId: string): Promise<void>` 구현
@@ -91,7 +92,7 @@ export interface NotionTodoItem {
 
 - 패키지: `@notionhq/client`
 - 날짜 속성 설정: `include time` 사용을 권장. `end date`가 없어도 동작해야 한다.
-- 필터 조건: 오늘 날짜가 범위 `[start, end]` 안에 포함되며, 날짜 속성이 비어 있지 않고, 상태가 `"할 일"` 또는 `"진행 중"`인 항목만 수집
+- 필터 조건: 날짜 속성이 비어 있지 않고, 상태가 `"할 일"` 또는 `"진행 중"`인 항목을 Notion에서 조회한 뒤 로컬에서 KST 기준 오늘 날짜와 겹치는 항목만 수집
   ```json
   {
     "and": [
@@ -101,13 +102,11 @@ export interface NotionTodoItem {
           { "property": "Status", "status": { "equals": "진행 중" } }
         ]
       },
-      { "property": "날짜", "date": { "is_not_empty": true } },
-      { "property": "날짜", "date": { "on_or_before": "2026-04-22" } },
-      { "property": "날짜", "date": { "on_or_after": "2026-04-22" } }
+      { "property": "날짜", "date": { "is_not_empty": true } }
     ]
   }
   ```
-  > `on_or_before`는 `end`를, `on_or_after`는 `start`를 기준으로 비교한다. 두 조건을 AND로 묶으면 오늘이 범위 안에 속하는 항목만 반환된다.
+  > `on_or_after: YYYY-MM-DD` 같은 서버 필터는 시간 포함 날짜를 비교할 때 KST 오전 시간대가 UTC 전날로 해석되어 누락될 수 있으므로 사용하지 않는다.
 - Notion Date 응답 구조 예시:
   ```
   {

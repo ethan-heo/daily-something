@@ -1,10 +1,10 @@
 import { Client, collectPaginatedAPI, isFullPage, type PageObjectResponse } from '@notionhq/client';
+import { getNextDateInSeoul } from '../shared/date';
 import type { NotionTodoItem } from '../types';
 
 const DEFAULT_DATE_PROPERTY = '날짜';
 const DEFAULT_STATUS_PROPERTY = 'Status';
 const DEFAULT_TODO_STATUSES = ['할 일', '진행 중'];
-const TODO_STATUS = '할 일';
 const IN_PROGRESS_STATUS = '진행 중';
 
 export async function queryTodosFromNotion(date: string): Promise<NotionTodoItem[]> {
@@ -33,18 +33,6 @@ export async function queryTodosFromNotion(date: string): Promise<NotionTodoItem
             is_not_empty: true,
           },
         },
-        {
-          property: dateProperty,
-          date: {
-            on_or_before: date,
-          },
-        },
-        {
-          property: dateProperty,
-          date: {
-            on_or_after: date,
-          },
-        },
       ],
     },
   });
@@ -52,7 +40,30 @@ export async function queryTodosFromNotion(date: string): Promise<NotionTodoItem
   return results
     .filter(isFullPage)
     .map((page) => mapPageToTodoItem(page, dateProperty, statusProperty))
-    .filter((item): item is NotionTodoItem => item !== null);
+    .filter((item): item is NotionTodoItem => item !== null)
+    .filter((item) => isTodoItemOnSeoulDate(item, date));
+}
+
+function isTodoItemOnSeoulDate(item: NotionTodoItem, date: string): boolean {
+  const dayStart = toSeoulDateTime(date).getTime();
+  const dayEnd = toSeoulDateTime(getNextDateInSeoul(date)).getTime();
+  const startsAt = toSeoulDateTime(item.startDateTime).getTime();
+
+  if (!item.endDateTime) {
+    return dayStart <= startsAt && startsAt < dayEnd;
+  }
+
+  const endsAt = toSeoulDateTime(item.endDateTime).getTime();
+
+  return startsAt < dayEnd && dayStart < endsAt;
+}
+
+function toSeoulDateTime(value: string): Date {
+  if (value.includes('T')) {
+    return new Date(value);
+  }
+
+  return new Date(`${value}T00:00:00+09:00`);
 }
 
 export async function markTodoInProgress(pageId: string): Promise<void> {
